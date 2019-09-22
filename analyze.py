@@ -22,7 +22,6 @@ def main():
     for argv in argvs:
         file_pattern = argv+"*"
         mean_y.append(load_mean_steps(file_pattern))
-    import pdb; pdb.set_trace()
     mean_y = np.array(mean_y).T.tolist()
     export_df = pd.DataFrame(mean_y, columns=argvs)
     export_df.to_csv("mean_steps.csv", index=False)
