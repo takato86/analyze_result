@@ -4,6 +4,10 @@ import pandas as pd
 import numpy as np
 import sys
 import glob
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger()
 
 
 def load_mean_steps(file_pattern):
@@ -16,15 +20,28 @@ def load_mean_steps(file_pattern):
                 mean_y[step] = 1/(1+run) * (run * mean_y[step] + int(row[0]))
     return mean_y
 
+def get_total_steps(mean_ys):
+    total_steps = []
+    for mean_y in mean_ys:
+        total_steps.append(sum(mean_y))
+    return total_steps
+
+def export_csv(file_name, contents):
+    export_df = pd.DataFrame(contents, columns=sys.argv[1:])
+    export_df.to_csv(file_name, index=False)
+    logger.info(f"export {file_name}")
+
 def main():
     argvs = sys.argv[1:]
     mean_y = []
     for argv in argvs:
         file_pattern = argv+"*"
         mean_y.append(load_mean_steps(file_pattern))
+    total_steps = np.array([get_total_steps(mean_y)])
     mean_y = np.array(mean_y).T.tolist()
-    export_df = pd.DataFrame(mean_y, columns=argvs)
-    export_df.to_csv("mean_steps.csv", index=False)
+    export_csv("total_steps.csv", total_steps)
+    export_csv("mean_steps.csv", mean_y)
+    
 
 
 if __name__ == "__main__":
