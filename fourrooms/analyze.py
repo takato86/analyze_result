@@ -81,12 +81,13 @@ def load_asymptotic_steps(file_pattern):
 
 
 def export_csv(file_name, contents):
+    dir_name = "out"
     if type(contents) != pd.DataFrame:
         export_df = pd.DataFrame(contents, columns=sys.argv[1:])
     else:
         export_df = contents
         export_df.columns = sys.argv[1:]
-    export_df.to_csv(file_name, index=False)
+    export_df.to_csv(os.path.join(dir_name, file_name), index=False)
     logger.info(f"export {file_name}")
 
 
