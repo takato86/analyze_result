@@ -13,13 +13,19 @@ logger = logging.getLogger()
 def load_mean_steps(file_pattern):
     n_episodes = 1000
     mean_y = [0] * n_episodes
+    var_y = [0] * n_episodes
     for run, file_path in enumerate(glob.glob(file_pattern)):
         with open(file_path, "r", encoding='utf-8') as f:
             reader = csv.reader(f)
             for step, row in enumerate(reader):
+                prev_mean_y = mean_y[step]
                 mean_y[step] = 1/(1+run) * (run * mean_y[step] + int(row[0]))
-    return mean_y
-
+                try:
+                    var_y[step] = (run * (var_y[step] + prev_mean_y**2) + int(row[0]) ** 2)/(1+run) - mean_y[step]**2
+                except:
+                    import pdb; pdb.set_trace()
+    se = [(var / run)**0.5 for var in var_y]
+    return mean_y, se
 
 def get_total_steps(mean_ys):
     total_steps = []
@@ -118,6 +124,7 @@ def transform(contents):
 def main():
     argvs = sys.argv[1:]
     mean_y = []
+    se_y = []
     first_steps = []
     asymptotic_performance = []
     asymptotic_steps = []
@@ -129,7 +136,9 @@ def main():
     time_to_threshold_50 = []
     for argv in argvs:
         file_pattern = argv+"*"
-        mean_y.append(load_mean_steps(file_pattern))
+        mean_step, se = load_mean_steps(file_pattern)
+        mean_y.append(mean_step)
+        se_y.append(se)
         first_steps.append(load_first_steps(file_pattern))
         asymptotic_performance.append(load_asymptotic_performances(file_pattern))
         asymptotic_steps.append(load_asymptotic_steps(file_pattern))
@@ -142,6 +151,7 @@ def main():
     total_steps = np.array([get_total_steps(mean_y)])
     mean_y = np.array(mean_y).T.tolist()
     first_steps = pd.DataFrame(first_steps).T
+    se_y = transform(se_y)
     asymptotic_performance = transform(asymptotic_performance)
     asymptotic_steps = transform(asymptotic_steps)
     cumulative_steps = transform(cumulative_steps)
@@ -152,6 +162,7 @@ def main():
     time_to_threshold_50 = transform(time_to_threshold_50)
     export_csv("total_steps.csv", total_steps)
     export_csv("mean_steps.csv", mean_y)
+    export_csv("standard_error.csv", se_y)
     export_csv("first_steps.csv", first_steps)
     export_csv("asymptotic_performance.csv", asymptotic_performance)
     export_csv("asymptotic_steps.csv", asymptotic_steps)
