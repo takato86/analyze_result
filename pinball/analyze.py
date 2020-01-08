@@ -60,6 +60,15 @@ def output_time_to_threshold(file_pattern, threshold):
     return time_to_threshold
 
 
+def output_asymptotic_performance(file_pattern, window=10):
+    total_rewards = load_total_reward(file_pattern)
+    asymptotic_performances = []
+    for total_reward in total_rewards:
+        t_reward = np.array(total_reward[len(total_reward)-window:])
+        asymptotic_performances.append(np.mean(total_reward))
+    return asymptotic_performances
+
+
 def calc_moved_average(total_rewards, window=10):
     moved_average_total_rewards = []
     mean_total_rewards = np.mean(total_rewards, axis=0)
@@ -80,10 +89,12 @@ def main():
     argvs = sys.argv[1:]
     processed_v = {}
     time_to_threshold = {}
+    asymptotic_performances = {}
     thresholds = [0, 1000, 2000, 4000, 6000, 7000, 8000, 9000]
     for argv in argvs:
         processed_v[argv+"_"+"mean"] = average_values(argv)
         processed_v[argv+"_"+"ste"] = output_standard_error(argv)
+        asymptotic_performances[argv] = output_asymptotic_performance(argv)
         for threshold in thresholds:
             time_to_threshold[str(threshold) + "_" + argv]\
                 = output_time_to_threshold(argv, threshold)
@@ -95,6 +106,11 @@ def main():
     file_name = 'time_to_threshold_total_reward.csv'
     file_path = os.path.join(out_dir, file_name)
     export(file_path, time_to_threshold)
+
+    file_name = 'asymptotic_performance_total_reward.csv'
+    file_path = os.path.join(out_dir, file_name)
+    export(file_path, asymptotic_performances)
+
 
 
 
