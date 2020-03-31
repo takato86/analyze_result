@@ -6,7 +6,7 @@ import sys
 import glob
 import logging
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger()
 
 
@@ -14,6 +14,7 @@ def load_mean_steps(file_pattern):
     n_episodes = 1000
     mean_y = [0] * n_episodes
     var_y = [0] * n_episodes
+    logger.debug(len(glob.glob(file_pattern)))
     for run, file_path in enumerate(glob.glob(file_pattern)):
         with open(file_path, "r", encoding='utf-8') as f:
             reader = csv.reader(f)
@@ -44,25 +45,21 @@ def load_first_steps(file_pattern):
     return first_steps
 
 
-def load_asymptotic_performances(file_pattern):
-    n_window = 10
-    n_episodes = 1000
+def load_asymptotic_performances(file_pattern, n_window=10, n_episodes=1000):
     asymptotic_performances = []
     for run, file_path in enumerate(glob.glob(file_pattern)):
         with open(file_path, "r", encoding='utf-8') as f:
             reader = csv.reader(f)
             asymptotic_performance = 0
             for step, row in enumerate(reader):
-                if step >= n_episodes - n_window:
+                if step > n_episodes - n_window and step <= n_episodes:
                     asymptotic_performance += int(row[0])
             asymptotic_performances.append(asymptotic_performance / n_window)
     return asymptotic_performances
 
 
-def load_asymptotic_steps(file_pattern):
+def load_asymptotic_steps(file_pattern, n_window=10, n_episodes=1000):
     asymptotic_steps = []
-    n_window = 10
-    n_episodes = 1000
     for run, file_path in enumerate(glob.glob(file_pattern)):
         data = []
         asymptotic_performance = 0
@@ -70,7 +67,7 @@ def load_asymptotic_steps(file_pattern):
             reader = csv.reader(f)
             for step, row in enumerate(reader):
                 data.append(row)
-                if step >= n_episodes - n_window:
+                if step > n_episodes - n_window and step <= n_episodes:
                     asymptotic_performance += int(row[0])
             asymptotic_performance /= n_window
             for step, row in enumerate(data):
