@@ -51,8 +51,9 @@ def load_asymptotic_performances(file_pattern, n_window=10, n_episodes=1000):
         with open(file_path, "r", encoding='utf-8') as f:
             reader = csv.reader(f)
             asymptotic_performance = 0
+            episode_index = n_episodes - 1
             for step, row in enumerate(reader):
-                if step > n_episodes - n_window and step <= n_episodes:
+                if step > episode_index - n_window and step <= episode_index:
                     asymptotic_performance += int(row[0])
             asymptotic_performances.append(asymptotic_performance / n_window)
     return asymptotic_performances
@@ -66,8 +67,9 @@ def load_asymptotic_steps(file_pattern, n_window=10, n_episodes=1000):
         with open(file_path, "r", encoding='utf-8') as f:
             reader = csv.reader(f)
             for step, row in enumerate(reader):
+                episode_index = n_episodes - 1
                 data.append(row)
-                if step > n_episodes - n_window and step <= n_episodes:
+                if step > episode_index - n_window and step <= episode_index:
                     asymptotic_performance += int(row[0])
             asymptotic_performance /= n_window
             for step, row in enumerate(data):
