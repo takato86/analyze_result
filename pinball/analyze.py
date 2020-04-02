@@ -38,6 +38,7 @@ def load_total_reward(file_pattern):
 
 
 def average_values(file_pattern):
+    file_list = get_file_list(file_pattern)
     total_rewards = load_total_reward(file_pattern)
     total_rewards = np.array(total_rewards)
     mean_total_rewards = np.mean(total_rewards, axis=0)
