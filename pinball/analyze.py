@@ -57,12 +57,13 @@ def get_asymptotic_performance(file_pattern, n_window=10, episode=200):
     return asymptotic_performance
 
 
-def get_time_to_threshold(file_pattern, threshold, n_window=10):
+def get_time_to_threshold(file_pattern, threshold, n_window=10, n_episodes=200):
     # 移動平均を取ったあとにTime2Thresholdを取得
     file_list = get_file_list(file_pattern)
     time_to_thresholds = []
     for file_path in file_list:
         value_df = pd.read_csv(file_path, index_col=0)
+        value_df = value_df[:n_episodes]
         maveraged_df = value_df.rolling(window=n_window, min_periods=5).mean()
         v_list = maveraged_df.values.tolist()
         time_to_threshold = len(v_list)
@@ -128,7 +129,7 @@ def main():
     averaged_value = {}
     se_value = {}
     t2thres_3000 = {}
-    t2thres_4000 = {}
+    t2thres_500 = {}
     t2thres_2000 = {}
     t2thres_1000 = {}
     asym_perf = {}
@@ -136,9 +137,10 @@ def main():
         logger.info("Loading...\n {}".format(argv))
         averaged_value[argv], se_value[argv] = average_values(argv)
         t2thres_3000[argv] = get_time_to_threshold(argv, 3000)
-        t2thres_4000[argv] = get_time_to_threshold(argv, 4000)
+        t2thres_500[argv] = get_time_to_threshold(argv, 500)
         t2thres_2000[argv] = get_time_to_threshold(argv, 2000)
         t2thres_1000[argv] = get_time_to_threshold(argv, 1000)
+        
         asym_perf[argv] = get_asymptotic_performance(argv, 10 ,200)
     out_dir = 'out'
     file_name = 'mean_ste_total_reward.csv'
@@ -147,7 +149,7 @@ def main():
     export(file_path, averaged_value)
     export(os.path.join(out_dir, "standard_error.csv"), se_value)
     export(os.path.join(out_dir, "time_to_threshold_3000.csv"), t2thres_3000)
-    export(os.path.join(out_dir, "time_to_threshold_4000.csv"), t2thres_4000)
+    export(os.path.join(out_dir, "time_to_threshold_500.csv"), t2thres_500)
     export(os.path.join(out_dir, "time_to_threshold_2000.csv"), t2thres_2000)
     export(os.path.join(out_dir, "time_to_threshold_1000.csv"), t2thres_1000)
     export(os.path.join(out_dir, "asymptotic_performance.csv"), asym_perf)

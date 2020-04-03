@@ -1,3 +1,6 @@
 **/out/**
 **/.vscode/**
 **/in/**
+!notebooks/in/*
+!notebooks/out/*
+**/.ipynb_checkpoints/**
