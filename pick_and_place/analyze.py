@@ -31,7 +31,8 @@ def load_total_reward(file_pattern):
     total_rewards = []
     for file_path in file_list:
         logger.info(f"Processing on {file_path} ....")
-        total_reward_df = pd.read_csv(file_path, index_col=0)
+        progress_df = pd.read_csv(file_path, index_col=0)
+        total_reward_df = progress_df["test/success_rate"]
         total_reward = total_reward_df.values.reshape(len(total_reward_df.index))
         total_rewards.append(total_reward.tolist())
     return total_rewards
@@ -51,8 +52,8 @@ def get_asymptotic_performance(file_pattern, n_window=10, episode=200):
     asymptotic_performance = []
     file_list = get_file_list(file_pattern)
     for file_path in file_list:
-        value_df = pd.read_csv(file_path, index_col=0)
-        values = value_df.values.tolist()[episode - n_window: episode]
+        progress_df = pd.read_csv(file_path, index_col=0)
+        values = progress_df["test/success_rate"].values.tolist()[episode - n_window: episode]
         asymptotic_performance.append(np.mean(values))
     return asymptotic_performance
 
@@ -62,13 +63,14 @@ def get_time_to_threshold(file_pattern, threshold, n_window=10, n_episodes=200):
     file_list = get_file_list(file_pattern)
     time_to_thresholds = []
     for file_path in file_list:
-        value_df = pd.read_csv(file_path, index_col=0)
-        value_df = value_df[:n_episodes]
+        progress_df = pd.read_csv(file_path, index_col=0)
+        value_df = progress_df["test/success_rate"][:n_episodes]
         maveraged_df = value_df.rolling(window=n_window, min_periods=5).mean()
         v_list = maveraged_df.values.tolist()
         time_to_threshold = len(v_list)
+        # import pdb; pdb.set_trace()
         for step, row in enumerate(v_list[5:]):
-            if row[0] <= threshold:
+            if row >= threshold:
                 time_to_threshold = step + 1
                 break
         time_to_thresholds.append(time_to_threshold)
@@ -128,31 +130,34 @@ def main():
     argvs = sys.argv[1:]
     averaged_value = {}
     se_value = {}
-    t2thres_3000 = {}
-    t2thres_500 = {}
-    t2thres_2000 = {}
-    t2thres_1000 = {}
+    t2thres_2 = {}
+    t2thres_4 = {}
+    t2thres_6 = {}
+    t2thres_8 = {}
+    t2thres_9 = {}
     asym_perf = {}
     for argv in argvs:
         logger.info("Loading...\n {}".format(argv))
         averaged_value[argv], se_value[argv] = average_values(argv)
-        t2thres_3000[argv] = get_time_to_threshold(argv, 3000)
-        t2thres_500[argv] = get_time_to_threshold(argv, 500)
-        t2thres_2000[argv] = get_time_to_threshold(argv, 2000)
-        t2thres_1000[argv] = get_time_to_threshold(argv, 1000)
-        
-        asym_perf[argv] = get_asymptotic_performance(argv, n_window=5 ,episode=100)
+        t2thres_2[argv] = get_time_to_threshold(argv, 0.2)
+        t2thres_4[argv] = get_time_to_threshold(argv, 0.4)
+        t2thres_6[argv] = get_time_to_threshold(argv, 0.6)
+        t2thres_8[argv] = get_time_to_threshold(argv, 0.8)
+        t2thres_9[argv] = get_time_to_threshold(argv, 0.9)
+        asym_perf[argv] = get_asymptotic_performance(argv, n_window=10 ,episode=200)
     out_dir = 'out'
     file_name = 'mean_ste_total_reward.csv'
     file_path = os.path.join(out_dir, file_name)
     logger.info("Exporting...")
     export(file_path, averaged_value)
     export(os.path.join(out_dir, "standard_error.csv"), se_value)
-    export(os.path.join(out_dir, "time_to_threshold_3000.csv"), t2thres_3000)
-    export(os.path.join(out_dir, "time_to_threshold_500.csv"), t2thres_500)
-    export(os.path.join(out_dir, "time_to_threshold_2000.csv"), t2thres_2000)
-    export(os.path.join(out_dir, "time_to_threshold_1000.csv"), t2thres_1000)
+    export(os.path.join(out_dir, "time_to_threshold_2.csv"), t2thres_2)
+    export(os.path.join(out_dir, "time_to_threshold_4.csv"), t2thres_4)
+    export(os.path.join(out_dir, "time_to_threshold_6.csv"), t2thres_6)
+    export(os.path.join(out_dir, "time_to_threshold_8.csv"), t2thres_8)
+    export(os.path.join(out_dir, "time_to_threshold_9.csv"), t2thres_9)
     export(os.path.join(out_dir, "asymptotic_performance.csv"), asym_perf)
+
 
 if __name__ == "__main__":
     main()
