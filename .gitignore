@@ -1,6 +1,7 @@
 **/out/**
 **/.vscode/**
 **/in/**
+!pick_and_place/in/*
 !notebooks/in/*
 !notebooks/out/*
 **/.ipynb_checkpoints/**
