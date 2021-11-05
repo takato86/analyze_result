@@ -4,13 +4,10 @@ import glob
 import sys
 import os
 import logging
+import json
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger()
-
-
-def get_file_list(file_pattern):
-    return glob.glob(file_pattern)
 
 
 def export(out_file_path, content):
@@ -26,31 +23,26 @@ def export(out_file_path, content):
     logger.info(f"Export {out_file_path}")
 
 
-def load_total_reward(file_pattern):
-    file_list = get_file_list(file_pattern)
-    total_rewards = []
-    for file_path in file_list:
-        logger.info(f"Processing on {file_path} ....")
-        progress_df = pd.read_csv(file_path, index_col=0)
-        total_reward_df = progress_df["test/success_rate"]
-        total_reward = total_reward_df.values.reshape(len(total_reward_df.index))
-        total_rewards.append(total_reward.tolist())
-    return total_rewards
-
-
-def average_values(file_pattern):
-    file_list = get_file_list(file_pattern)
-    total_rewards = load_total_reward(file_pattern)
-    total_rewards = np.array(total_rewards)
-    mean_total_rewards = np.mean(total_rewards, axis=0)
-    var_total_rewards = np.var(total_rewards, axis=0)
-    standard_error = (var_total_rewards / len(file_list))**0.5
-    return mean_total_rewards, standard_error
+def result_learning_curves(file_pattern, prefix, column="test/success_rate"):
+    """学習曲線を描画するための結果を返す。"""
+    serieses = []
+    result = pd.DataFrame()
+    for file_path in glob.glob(file_pattern):
+        logger.info("Loading {}".format(file_path))
+        series = pd.read_csv(file_path, index_col=0)[column]
+        serieses.append(series)
+    df = pd.concat(serieses, axis=1)
+    result["mean"] = df.mean(axis=1)
+    result["se"] = (df.var(axis=1) / len(df))**0.5
+    result["upper"] = result["mean"] + result["se"]
+    result["lower"] = result["mean"] - result["se"]
+    result = result.add_prefix(prefix)
+    return result
 
 
 def get_asymptotic_performance(file_pattern, n_window=10, episode=200):
     asymptotic_performance = []
-    file_list = get_file_list(file_pattern)
+    file_list = glob.glob(file_pattern)
     for file_path in file_list:
         progress_df = pd.read_csv(file_path, index_col=0)
         values = progress_df["test/success_rate"].values.tolist()[episode - n_window: episode]
@@ -60,7 +52,7 @@ def get_asymptotic_performance(file_pattern, n_window=10, episode=200):
 
 def get_time_to_threshold(file_pattern, threshold, n_window=10, n_episodes=200):
     # 移動平均を取ったあとにTime2Thresholdを取得
-    file_list = get_file_list(file_pattern)
+    file_list = glob.glob(file_pattern)
     time_to_thresholds = []
     for file_path in file_list:
         progress_df = pd.read_csv(file_path, index_col=0)
@@ -77,80 +69,25 @@ def get_time_to_threshold(file_pattern, threshold, n_window=10, n_episodes=200):
     return time_to_thresholds
 
 
-def output_standard_error(file_pattern):
-    total_rewards = load_total_reward(file_pattern)
-    total_rewards = np.array(total_rewards)
-    std_total_rewards = np.std(total_rewards, axis=0)
-    ste_total_rewards = std_total_rewards / np.sqrt(total_rewards.shape[0])
-    return ste_total_rewards
-
-
-def output_time_to_threshold(file_pattern, threshold):
-    total_rewards = load_total_reward(file_pattern)
-    time_to_threshold = []
-    moved_averaged = calc_moved_average(total_rewards)
-    for total_reward in moved_averaged:
-        flag = False
-        for episode, reward in enumerate(total_reward):
-            if threshold < reward:
-                time_to_threshold.append(episode)
-                flag = True
-                break
-        if episode == len(total_reward) - 1 and not flag:
-            time_to_threshold.append(episode)
-    return time_to_threshold
-
-
-def output_asymptotic_performance(file_pattern, window=10):
-    total_rewards = load_total_reward(file_pattern)
-    asymptotic_performances = []
-    for total_reward in total_rewards:
-        t_reward = np.array(total_reward[len(total_reward)-window:])
-        asymptotic_performances.append(np.mean(total_reward))
-    return asymptotic_performances
-
-
-def calc_moved_average(total_rewards, window=10):
-    moved_average_total_rewards = []
-    mean_total_rewards = np.mean(total_rewards, axis=0)
-    for total_reward in total_rewards:
-        moved_average_total_reward = []
-        for episode, reward in enumerate(total_reward):
-            if episode < window:
-                moved_average = mean_total_rewards[episode]
-            else:
-                moved_average\
-                    = sum(total_reward[episode - window: episode+1]) / window
-            moved_average_total_reward.append(moved_average)
-        moved_average_total_rewards.append(moved_average_total_reward)
-    return moved_average_total_rewards
-
-
 def main():
-    argvs = sys.argv[1:]
-    averaged_value = {}
-    se_value = {}
-    t2thres_2 = {}
-    t2thres_4 = {}
-    t2thres_6 = {}
-    t2thres_8 = {}
-    t2thres_9 = {}
+    with open("config.json", "r") as f:
+        configs = json.load(f)
+    t2thres_2, t2thres_4, t2thres_6, t2thres_8, t2thres_9 = {}, {}, {}, {}, {}
     asym_perf = {}
-    for argv in argvs:
-        logger.info("Loading...\n {}".format(argv))
-        averaged_value[argv], se_value[argv] = average_values(argv)
-        t2thres_2[argv] = get_time_to_threshold(argv, 0.2)
-        t2thres_4[argv] = get_time_to_threshold(argv, 0.4)
-        t2thres_6[argv] = get_time_to_threshold(argv, 0.6)
-        t2thres_8[argv] = get_time_to_threshold(argv, 0.8)
-        t2thres_9[argv] = get_time_to_threshold(argv, 0.9)
-        asym_perf[argv] = get_asymptotic_performance(argv, n_window=10 ,episode=200)
+    learning_curves = []
+    for file_pattern, prefix in zip(configs["file_patterns"], configs["prefixes"]):
+        logger.info("Loading...\n {}".format(file_pattern))
+        learning_curves.append(result_learning_curves(file_pattern, prefix))
+        t2thres_2[file_pattern] = get_time_to_threshold(file_pattern, 0.2)
+        t2thres_4[file_pattern] = get_time_to_threshold(file_pattern, 0.4)
+        t2thres_6[file_pattern] = get_time_to_threshold(file_pattern, 0.6)
+        t2thres_8[file_pattern] = get_time_to_threshold(file_pattern, 0.8)
+        t2thres_9[file_pattern] = get_time_to_threshold(file_pattern, 0.9)
+        asym_perf[file_pattern] = get_asymptotic_performance(file_pattern, n_window=10 ,episode=200)
+    learning_curve_df = pd.concat(learning_curves, axis=1)
     out_dir = 'out'
-    file_name = 'mean_ste_total_reward.csv'
-    file_path = os.path.join(out_dir, file_name)
     logger.info("Exporting...")
-    export(file_path, averaged_value)
-    export(os.path.join(out_dir, "standard_error.csv"), se_value)
+    learning_curve_df.to_csv(os.path.join(out_dir, "learning_curve.csv"))
     export(os.path.join(out_dir, "time_to_threshold_2.csv"), t2thres_2)
     export(os.path.join(out_dir, "time_to_threshold_4.csv"), t2thres_4)
     export(os.path.join(out_dir, "time_to_threshold_6.csv"), t2thres_6)

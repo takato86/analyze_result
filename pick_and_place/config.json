@@ -1,0 +1,10 @@
+{
+    "file_patterns": [
+        "/home/tokudo/logs/202102_m2s_dta_is_success-seed=*/progress.csv",
+        "/home/tokudo/logs/202102_m2s_srs-seed=*/progress.csv",
+        "/home/tokudo/logs/202102_m2s_nrs-seed=*/progress.csv"
+    ],
+    "prefixes": [
+        "DTA-", "SRS-", "NRS-"
+    ]
+}

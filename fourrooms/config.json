@@ -1,0 +1,4 @@
+{
+    "file_patterns": ["in/human-dta/*", "in/human-srs-eta=0.01/*", "in/sarsa/*", "in/sprs_fourrooms_human/steps/*"],
+    "prefixes": ["DTA-", "SRS-", "SARSA-", "SPRS-"]
+}

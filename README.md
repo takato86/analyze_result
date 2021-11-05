@@ -4,5 +4,3 @@
 cd fourrooms
 python analyze.py "in/hoge/hoge*steps*"
 ```
-
-
