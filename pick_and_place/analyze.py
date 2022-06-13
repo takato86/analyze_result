@@ -23,40 +23,44 @@ def export(out_file_path, content):
     logger.info(f"Export {out_file_path}")
 
 
-def result_learning_curves(file_pattern, prefix, column="test/success_rate"):
+def result_learning_curves(file_pattern, prefix, column="test/success_rate", window=10):
     """学習曲線を描画するための結果を返す。"""
     serieses = []
     result = pd.DataFrame()
     for file_path in glob.glob(file_pattern):
         logger.info("Loading {}".format(file_path))
         series = pd.read_csv(file_path, index_col=0)[column]
+        series = series.dropna()
         serieses.append(series)
     df = pd.concat(serieses, axis=1)
+    # TODO 移動平均
     result["mean"] = df.mean(axis=1)
+    result["mv"] = result["mean"].rolling(window, min_periods=1).mean()
     result["se"] = (df.var(axis=1) / len(df))**0.5
-    result["upper"] = result["mean"] + result["se"]
-    result["lower"] = result["mean"] - result["se"]
+    result = result.fillna(0)
+    result["upper"] = result["mv"] + result["se"]
+    result["lower"] = result["mv"] - result["se"]
     result = result.add_prefix(prefix)
     return result
 
 
-def get_asymptotic_performance(file_pattern, n_window=10, episode=200):
+def get_asymptotic_performance(file_pattern, n_window=10, episode=200, column="test/success_rate"):
     asymptotic_performance = []
     file_list = glob.glob(file_pattern)
     for file_path in file_list:
         progress_df = pd.read_csv(file_path, index_col=0)
-        values = progress_df["test/success_rate"].values.tolist()[episode - n_window: episode]
+        values = progress_df[column].values.tolist()[episode - n_window: episode]
         asymptotic_performance.append(np.mean(values))
     return asymptotic_performance
 
 
-def get_time_to_threshold(file_pattern, threshold, n_window=10, n_episodes=200):
+def get_time_to_threshold(file_pattern, threshold, n_window=10, n_episodes=200, column="test/success_rate"):
     # 移動平均を取ったあとにTime2Thresholdを取得
     file_list = glob.glob(file_pattern)
     time_to_thresholds = []
     for file_path in file_list:
         progress_df = pd.read_csv(file_path, index_col=0)
-        value_df = progress_df["test/success_rate"][:n_episodes]
+        value_df = progress_df[column][:n_episodes]
         maveraged_df = value_df.rolling(window=n_window, min_periods=5).mean()
         v_list = maveraged_df.values.tolist()
         time_to_threshold = len(v_list)
@@ -77,14 +81,17 @@ def main():
     learning_curves = []
     for file_pattern, prefix in zip(configs["file_patterns"], configs["prefixes"]):
         logger.info("Loading...\n {}".format(file_pattern))
-        learning_curves.append(result_learning_curves(file_pattern, prefix))
-        t2thres_2[file_pattern] = get_time_to_threshold(file_pattern, 0.2)
-        t2thres_4[file_pattern] = get_time_to_threshold(file_pattern, 0.4)
-        t2thres_6[file_pattern] = get_time_to_threshold(file_pattern, 0.6)
-        t2thres_8[file_pattern] = get_time_to_threshold(file_pattern, 0.8)
-        t2thres_9[file_pattern] = get_time_to_threshold(file_pattern, 0.9)
-        asym_perf[file_pattern] = get_asymptotic_performance(file_pattern, n_window=10 ,episode=200)
+        learning_curves.append(result_learning_curves(file_pattern, prefix, configs["column"]))
+        t2thres_2[file_pattern] = get_time_to_threshold(file_pattern, 0.2, column=configs["column"])
+        t2thres_4[file_pattern] = get_time_to_threshold(file_pattern, 0.4, column=configs["column"])
+        t2thres_6[file_pattern] = get_time_to_threshold(file_pattern, 0.6, column=configs["column"])
+        t2thres_8[file_pattern] = get_time_to_threshold(file_pattern, 0.8, column=configs["column"])
+        t2thres_9[file_pattern] = get_time_to_threshold(file_pattern, 0.9, column=configs["column"])
+        asym_perf[file_pattern] = get_asymptotic_performance(
+            file_pattern, n_window=10 ,episode=200, column=configs["column"]
+        )
     learning_curve_df = pd.concat(learning_curves, axis=1)
+    learning_curve_df = learning_curve_df.fillna(0)
     out_dir = 'out'
     logger.info("Exporting...")
     learning_curve_df.to_csv(os.path.join(out_dir, "learning_curve.csv"))
