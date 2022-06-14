@@ -1,3 +1,4 @@
+import json
 import pandas as pd
 import numpy as np
 import glob
@@ -125,29 +126,29 @@ def calc_moved_average(total_rewards, window=10):
 
 
 def main():
-    argvs = sys.argv[1:]
-    averaged_value = {}
-    se_value = {}
-    t2thres_3000 = {}
-    t2thres_500 = {}
-    t2thres_2000 = {}
-    t2thres_1000 = {}
-    asym_perf = {}
-    for argv in argvs:
-        logger.info("Loading...\n {}".format(argv))
-        averaged_value[argv], se_value[argv] = average_values(argv)
-        t2thres_3000[argv] = get_time_to_threshold(argv, 3000)
-        t2thres_500[argv] = get_time_to_threshold(argv, 500)
-        t2thres_2000[argv] = get_time_to_threshold(argv, 2000)
-        t2thres_1000[argv] = get_time_to_threshold(argv, 1000)
-        
-        asym_perf[argv] = get_asymptotic_performance(argv, n_window=5 ,episode=100)
+    with open("config.json", "r") as f:
+        configs = json.load(f)
+
+    file_patterns = configs["file_patterns"]
+    prefixes = configs["prefixes"]
+    asym_perf, learning_curve_dict = {}, {}
+    t2thres_500, t2thres_1000, t2thres_2000, t2thres_3000 = {}, {}, {}, {}
+
+    for prefix, file_pattern in zip(prefixes, file_patterns):
+        logger.info("Loading...\n {}".format(file_pattern))
+        learning_curve_dict[f"{prefix}-mean"], learning_curve_dict[f"{prefix}-se"] = average_values(file_pattern)
+        learning_curve_dict[f"{prefix}-mv"] = pd.Series(learning_curve_dict[f"{prefix}-mean"]).rolling(10, min_periods=1).mean()
+        learning_curve_dict[f"{prefix}-lower"] = learning_curve_dict[f"{prefix}-mv"] - learning_curve_dict[f"{prefix}-se"]
+        learning_curve_dict[f"{prefix}-upper"] = learning_curve_dict[f"{prefix}-mv"] + learning_curve_dict[f"{prefix}-se"]
+        t2thres_3000[file_pattern] = get_time_to_threshold(file_pattern, 3000)
+        t2thres_500[file_pattern] = get_time_to_threshold(file_pattern, 500)
+        t2thres_2000[file_pattern] = get_time_to_threshold(file_pattern, 2000)
+        t2thres_1000[file_pattern] = get_time_to_threshold(file_pattern, 1000)
+        asym_perf[file_pattern] = get_asymptotic_performance(file_pattern, n_window=5 ,episode=100)
+
     out_dir = 'out'
-    file_name = 'mean_ste_total_reward.csv'
-    file_path = os.path.join(out_dir, file_name)
     logger.info("Exporting...")
-    export(file_path, averaged_value)
-    export(os.path.join(out_dir, "standard_error.csv"), se_value)
+    export(os.path.join(out_dir, "learning_curve.csv"), learning_curve_dict)
     export(os.path.join(out_dir, "time_to_threshold_3000.csv"), t2thres_3000)
     export(os.path.join(out_dir, "time_to_threshold_500.csv"), t2thres_500)
     export(os.path.join(out_dir, "time_to_threshold_2000.csv"), t2thres_2000)
