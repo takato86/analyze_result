@@ -13,11 +13,8 @@ logger = logging.getLogger()
 def export(out_file_path, content):
     l = max(map(lambda x: len(x[1]), content.items()))
     filled_content = {}
-    try:
-        for key, val in content.items():
-            filled_content[key] = list(val) + [None]*(l-len(val))
-    except ValueError:
-        import pdb; pdb.set_trace()
+    for key, val in content.items():
+        filled_content[key] = list(val) + [None]*(l-len(val))
     export_df = pd.DataFrame(filled_content)
     export_df.to_csv(out_file_path)
     logger.info(f"Export {out_file_path}")
@@ -27,16 +24,17 @@ def result_learning_curves(file_pattern, prefix, column="test/success_rate", win
     """学習曲線を描画するための結果を返す。"""
     serieses = []
     result = pd.DataFrame()
+
     for file_path in glob.glob(file_pattern):
         logger.info("Loading {}".format(file_path))
         series = pd.read_csv(file_path, index_col=0)[column]
         series = series.dropna()
         serieses.append(series)
+
     df = pd.concat(serieses, axis=1)
-    # TODO 移動平均
     result["mean"] = df.mean(axis=1)
     result["mv"] = result["mean"].rolling(window, min_periods=1).mean()
-    result["se"] = (df.var(axis=1) / len(df))**0.5
+    result["se"] = (df.var(axis=1) / len(df.columns))**0.5
     result = result.fillna(0)
     result["upper"] = result["mv"] + result["se"]
     result["lower"] = result["mv"] - result["se"]
@@ -54,7 +52,8 @@ def get_asymptotic_performance(file_pattern, n_window=10, episode=200, column="t
     return asymptotic_performance
 
 
-def get_time_to_threshold(file_pattern, threshold, n_window=10, n_episodes=200, column="test/success_rate"):
+def get_time_to_threshold(file_pattern, threshold, n_window=10, n_episodes=200,
+                          column="test/success_rate"):
     # 移動平均を取ったあとにTime2Thresholdを取得
     file_list = glob.glob(file_pattern)
     time_to_thresholds = []
@@ -81,12 +80,24 @@ def main():
     learning_curves = []
     for file_pattern, prefix in zip(configs["file_patterns"], configs["prefixes"]):
         logger.info("Loading...\n {}".format(file_pattern))
-        learning_curves.append(result_learning_curves(file_pattern, prefix, configs["column"]))
-        t2thres_2[file_pattern] = get_time_to_threshold(file_pattern, 0.2, column=configs["column"])
-        t2thres_4[file_pattern] = get_time_to_threshold(file_pattern, 0.4, column=configs["column"])
-        t2thres_6[file_pattern] = get_time_to_threshold(file_pattern, 0.6, column=configs["column"])
-        t2thres_8[file_pattern] = get_time_to_threshold(file_pattern, 0.8, column=configs["column"])
-        t2thres_9[file_pattern] = get_time_to_threshold(file_pattern, 0.9, column=configs["column"])
+        learning_curves.append(
+            result_learning_curves(file_pattern, prefix, configs["column"])
+        )
+        t2thres_2[file_pattern] = get_time_to_threshold(
+            file_pattern, 0.2, column=configs["column"]
+        )
+        t2thres_4[file_pattern] = get_time_to_threshold(
+            file_pattern, 0.4, column=configs["column"]
+        )
+        t2thres_6[file_pattern] = get_time_to_threshold(
+            file_pattern, 0.6, column=configs["column"]
+        )
+        t2thres_8[file_pattern] = get_time_to_threshold(
+            file_pattern, 0.8, column=configs["column"]
+        )
+        t2thres_9[file_pattern] = get_time_to_threshold(
+            file_pattern, 0.9, column=configs["column"]
+        )
         asym_perf[file_pattern] = get_asymptotic_performance(
             file_pattern, n_window=10 ,episode=200, column=configs["column"]
         )

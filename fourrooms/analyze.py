@@ -103,7 +103,7 @@ def result_learning_curve(file_pattern, prefix):
     df = pd.concat(serieses, axis=1)
     learning_curve = pd.DataFrame()
     learning_curve["mean"] = df.mean(axis=1)
-    learning_curve["se"] = (df.var(axis=1) / len(df)) ** 0.5
+    learning_curve["se"] = (df.var(axis=1) / len(df.columns)) ** 0.5
     learning_curve["upper"] = learning_curve["mean"] + learning_curve["se"]
     learning_curve["lower"] = learning_curve["mean"] - learning_curve["se"]
     learning_curve = learning_curve.add_prefix(prefix)
