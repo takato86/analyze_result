@@ -1,10 +1,14 @@
 {
     "file_patterns": [
-        "/home/tokudo/logs/202102_m2s_dta_is_success-seed=*/progress.csv",
-        "/home/tokudo/logs/202102_m2s_srs-seed=*/progress.csv",
-        "/home/tokudo/logs/202102_m2s_nrs-seed=*/progress.csv"
+        "/home/tokudo/Develop/research/pdrl/runs/train/dynamic_potential_v2/*/progress.csv",
+        "/home/tokudo/Develop/research/pdrl/runs/train/static_potential/*/progress.csv",
+        "/home/tokudo/Develop/research/pdrl/runs/baseline/*/progress.csv",
+        "/home/tokudo/Develop/research/pdrl/runs/train/naive_rs/*/progress.csv",
+        "/home/tokudo/Develop/research/pdrl/runs/train/linaive_rs/*/progress.csv",
+        "/home/tokudo/Develop/research/pdrl/runs/train/random_subgoal_v2/*/progress.csv"
     ],
+    "column": "Test/succ_rate",
     "prefixes": [
-        "DTA-", "SRS-", "NRS-"
+        "DSRS-", "SSRS-", "BASELINE-", "NRS-", "LiNRS-", "Random-"
     ]
 }
