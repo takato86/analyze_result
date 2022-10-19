@@ -13,11 +13,14 @@ logger = logging.getLogger()
 
 def load_first_steps(file_pattern):
     first_steps = []
-    for run, file_path in enumerate(glob.glob(file_pattern)):
+
+    for _, file_path in enumerate(glob.glob(file_pattern)):
+
         with open(file_path, "r", encoding='utf-8') as f:
             reader = csv.reader(f)
             row = next(reader)
             first_steps.append(int(row[0]))
+
     return first_steps
 
 
@@ -55,14 +58,9 @@ def load_asymptotic_steps(file_pattern, n_window=10, n_episodes=1000):
     return asymptotic_steps
 
 
-def export_csv(file_name, contents):
+def export_csv(file_name, export_df):
     dir_name = "out"
-    if type(contents) != pd.DataFrame:
-        export_df = pd.DataFrame(contents, columns=sys.argv[1:])
-    else:
-        export_df = contents
-        export_df.columns = sys.argv[1:]
-    export_df.to_csv(os.path.join(dir_name, file_name), index=False)
+    export_df.to_csv(os.path.join(dir_name, file_name))
     logger.info(f"export {file_name}")
 
 
@@ -111,62 +109,66 @@ def result_learning_curve(file_pattern, prefix):
 
 
 def transform(contents):
-    return pd.DataFrame(contents).T
+    return pd.DataFrame(contents)
 
 
 def main():
     with open("config.json", "r") as f:
         configs = json.load(f)
 
+    if not os.path.exists("out"):
+        os.mkdir("out")
+
     file_patterns = configs["file_patterns"]
     prefixes = configs["prefixes"]
-    # first_steps = []
-    # asymptotic_performance = []
-    # asymptotic_steps = []
-    # cumulative_steps = []
-    # time_to_threshold_700 = []
-    # time_to_threshold_500 = []
-    # time_to_threshold_300 = []
-    # time_to_threshold_100 = []
-    # time_to_threshold_50 = []
+    first_steps = {}
+    asymptotic_performance = {}
+    asymptotic_steps = {}
+    cumulative_steps = {}
+    time_to_threshold_700 = {}
+    time_to_threshold_500 = {}
+    time_to_threshold_300 = {}
+    time_to_threshold_100 = {}
+    time_to_threshold_50 = {}
     learning_curves = []
     for file_pattern, prefix in zip(file_patterns, prefixes):
         learning_curves.append(
             result_learning_curve(file_pattern, prefix)
         )
-        # first_steps.append(load_first_steps(file_pattern))
-        # asymptotic_performance.append(load_asymptotic_performances(file_pattern))
-        # asymptotic_steps.append(load_asymptotic_steps(file_pattern))
-        # cumulative_steps.append(calc_cumulative_steps(file_pattern, 50))
-        # time_to_threshold_700.append(calc_time_to_threshold(file_pattern, 700))
-        # time_to_threshold_500.append(calc_time_to_threshold(file_pattern, 500))
-        # time_to_threshold_300.append(calc_time_to_threshold(file_pattern, 300))
-        # time_to_threshold_100.append(calc_time_to_threshold(file_pattern, 100))
-        # time_to_threshold_50.append(calc_time_to_threshold(file_pattern, 50))
+        first_steps[prefix] = load_first_steps(file_pattern)
+        asymptotic_performance[prefix] = load_asymptotic_performances(file_pattern)
+        asymptotic_steps[prefix] = load_asymptotic_steps(file_pattern)
+        cumulative_steps[prefix] = calc_cumulative_steps(file_pattern, 50)
+        time_to_threshold_700[prefix] = calc_time_to_threshold(file_pattern, 700)
+        time_to_threshold_500[prefix] = calc_time_to_threshold(file_pattern, 500)
+        time_to_threshold_300[prefix] = calc_time_to_threshold(file_pattern, 300)
+        time_to_threshold_100[prefix] = calc_time_to_threshold(file_pattern, 100)
+        time_to_threshold_50[prefix] = calc_time_to_threshold(file_pattern, 50)
+
     learning_curve_df = pd.concat(learning_curves, axis=1)
     learning_curve_df.to_csv(os.path.join("out",
                                           "fourrooms_learning_curves.csv"))
     logging.info("Output {}.".format(
         os.path.join("out", "fourrooms_learning_curves.csv"))
     )
-    # first_steps = pd.DataFrame(first_steps).T
-    # asymptotic_performance = transform(asymptotic_performance)
-    # asymptotic_steps = transform(asymptotic_steps)
-    # cumulative_steps = transform(cumulative_steps)
-    # time_to_threshold_700 = transform(time_to_threshold_700)
-    # time_to_threshold_500 = transform(time_to_threshold_500)
-    # time_to_threshold_300 = transform(time_to_threshold_300)
-    # time_to_threshold_100 = transform(time_to_threshold_100)
-    # time_to_threshold_50 = transform(time_to_threshold_50)
-    # export_csv("first_steps.csv", first_steps)
-    # export_csv("asymptotic_performance.csv", asymptotic_performance)
-    # export_csv("asymptotic_steps.csv", asymptotic_steps)
-    # export_csv("cumulative_steps.csv", cumulative_steps)
-    # export_csv("time_to_threshold_700.csv", time_to_threshold_700)
-    # export_csv("time_to_threshold_500.csv", time_to_threshold_500)
-    # export_csv("time_to_threshold_300.csv", time_to_threshold_300)
-    # export_csv("time_to_threshold_100.csv", time_to_threshold_100)
-    # export_csv("time_to_threshold_50.csv", time_to_threshold_50)
+    first_steps = transform(first_steps)
+    asymptotic_performance = transform(asymptotic_performance)
+    asymptotic_steps = transform(asymptotic_steps)
+    cumulative_steps = transform(cumulative_steps)
+    time_to_threshold_700 = transform(time_to_threshold_700)
+    time_to_threshold_500 = transform(time_to_threshold_500)
+    time_to_threshold_300 = transform(time_to_threshold_300)
+    time_to_threshold_100 = transform(time_to_threshold_100)
+    time_to_threshold_50 = transform(time_to_threshold_50)
+    export_csv("first_steps.csv", first_steps)
+    export_csv("asymptotic_performance.csv", asymptotic_performance)
+    export_csv("asymptotic_steps.csv", asymptotic_steps)
+    export_csv("cumulative_steps.csv", cumulative_steps)
+    export_csv("time_to_threshold_700.csv", time_to_threshold_700)
+    export_csv("time_to_threshold_500.csv", time_to_threshold_500)
+    export_csv("time_to_threshold_300.csv", time_to_threshold_300)
+    export_csv("time_to_threshold_100.csv", time_to_threshold_100)
+    export_csv("time_to_threshold_50.csv", time_to_threshold_50)
 
 
 if __name__ == "__main__":

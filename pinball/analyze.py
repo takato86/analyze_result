@@ -140,11 +140,11 @@ def main():
         learning_curve_dict[f"{prefix}-mv"] = pd.Series(learning_curve_dict[f"{prefix}-mean"]).rolling(10, min_periods=1).mean()
         learning_curve_dict[f"{prefix}-lower"] = learning_curve_dict[f"{prefix}-mv"] - learning_curve_dict[f"{prefix}-se"]
         learning_curve_dict[f"{prefix}-upper"] = learning_curve_dict[f"{prefix}-mv"] + learning_curve_dict[f"{prefix}-se"]
-        t2thres_3000[file_pattern] = get_time_to_threshold(file_pattern, 3000)
-        t2thres_500[file_pattern] = get_time_to_threshold(file_pattern, 500)
-        t2thres_2000[file_pattern] = get_time_to_threshold(file_pattern, 2000)
-        t2thres_1000[file_pattern] = get_time_to_threshold(file_pattern, 1000)
-        asym_perf[file_pattern] = get_asymptotic_performance(file_pattern, n_window=5 ,episode=100)
+        t2thres_3000[prefix] = get_time_to_threshold(file_pattern, 3000)
+        t2thres_2000[prefix] = get_time_to_threshold(file_pattern, 2000)
+        t2thres_1000[prefix] = get_time_to_threshold(file_pattern, 1000)
+        t2thres_500[prefix] = get_time_to_threshold(file_pattern, 500)
+        asym_perf[prefix] = get_asymptotic_performance(file_pattern, n_window=5 ,episode=100)
 
     out_dir = 'out'
     logger.info("Exporting...")
