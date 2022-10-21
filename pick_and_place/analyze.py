@@ -104,6 +104,10 @@ def main():
     learning_curve_df = pd.concat(learning_curves, axis=1)
     learning_curve_df = learning_curve_df.fillna(0)
     out_dir = 'out'
+
+    if not os.path.exists(out_dir):
+        os.makedirs(out_dir)
+
     logger.info("Exporting...")
     learning_curve_df.to_csv(os.path.join(out_dir, "learning_curve.csv"))
     export(os.path.join(out_dir, "time_to_threshold_2.csv"), t2thres_2)
