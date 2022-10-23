@@ -147,6 +147,10 @@ def main():
         asym_perf[prefix] = get_asymptotic_performance(file_pattern, n_window=5 ,episode=100)
 
     out_dir = 'out'
+
+    if not os.path.exists(out_dir):
+        os.makedirs(out_dir)
+
     logger.info("Exporting...")
     export(os.path.join(out_dir, "learning_curve.csv"), learning_curve_dict)
     export(os.path.join(out_dir, "time_to_threshold_3000.csv"), t2thres_3000)
