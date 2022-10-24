@@ -1,3 +1,4 @@
+from typing import List
 import pandas as pd
 import numpy as np
 import glob
@@ -8,6 +9,15 @@ import json
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger()
+
+
+def read_files(file_pattern: str) -> List[pd.DataFrame]:
+    dfs = []
+
+    for fname in glob.glob(file_pattern):
+        dfs.append(pd.read_csv(fname, index_col=0))
+
+    return dfs
 
 
 def export(out_file_path, content):
@@ -72,33 +82,47 @@ def get_time_to_threshold(file_pattern, threshold, n_window=10, n_episodes=200,
     return time_to_thresholds
 
 
+def get_jumpstart(dfs: List[pd.DataFrame], n_episodes: int, column: str) -> List[float]:
+    jumpstarts = []
+
+    for df in dfs:
+        target_df = df.dropna()
+        jumpstarts.append(np.mean(target_df.loc[:n_episodes, column].values))
+
+    return jumpstarts
+
+
 def main():
     with open("config.json", "r") as f:
         configs = json.load(f)
+
     t2thres_2, t2thres_4, t2thres_6, t2thres_8, t2thres_9 = {}, {}, {}, {}, {}
-    asym_perf = {}
+    asym_perf, jumpstart = {}, {}
     learning_curves = []
+
     for file_pattern, prefix in zip(configs["file_patterns"], configs["prefixes"]):
         logger.info("Loading...\n {}".format(file_pattern))
+        dfs = read_files(file_pattern)
+        jumpstart[prefix] = get_jumpstart(dfs, 100, configs["column"])
         learning_curves.append(
             result_learning_curves(file_pattern, prefix, configs["column"])
         )
-        t2thres_2[file_pattern] = get_time_to_threshold(
+        t2thres_2[prefix] = get_time_to_threshold(
             file_pattern, 0.2, column=configs["column"]
         )
-        t2thres_4[file_pattern] = get_time_to_threshold(
+        t2thres_4[prefix] = get_time_to_threshold(
             file_pattern, 0.4, column=configs["column"]
         )
-        t2thres_6[file_pattern] = get_time_to_threshold(
+        t2thres_6[prefix] = get_time_to_threshold(
             file_pattern, 0.6, column=configs["column"]
         )
-        t2thres_8[file_pattern] = get_time_to_threshold(
+        t2thres_8[prefix] = get_time_to_threshold(
             file_pattern, 0.8, column=configs["column"]
         )
-        t2thres_9[file_pattern] = get_time_to_threshold(
+        t2thres_9[prefix] = get_time_to_threshold(
             file_pattern, 0.9, column=configs["column"]
         )
-        asym_perf[file_pattern] = get_asymptotic_performance(
+        asym_perf[prefix] = get_asymptotic_performance(
             file_pattern, n_window=10 ,episode=200, column=configs["column"]
         )
     learning_curve_df = pd.concat(learning_curves, axis=1)
@@ -116,6 +140,7 @@ def main():
     export(os.path.join(out_dir, "time_to_threshold_8.csv"), t2thres_8)
     export(os.path.join(out_dir, "time_to_threshold_9.csv"), t2thres_9)
     export(os.path.join(out_dir, "asymptotic_performance.csv"), asym_perf)
+    export(os.path.join(out_dir, "jumpstart.csv"), jumpstart)
 
 
 if __name__ == "__main__":

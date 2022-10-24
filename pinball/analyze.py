@@ -1,4 +1,5 @@
 import json
+from typing import List
 import pandas as pd
 import numpy as np
 import glob
@@ -76,53 +77,22 @@ def get_time_to_threshold(file_pattern, threshold, n_window=10, n_episodes=200):
     return time_to_thresholds
 
 
-def output_standard_error(file_pattern):
-    total_rewards = load_total_reward(file_pattern)
-    total_rewards = np.array(total_rewards)
-    std_total_rewards = np.std(total_rewards, axis=0)
-    ste_total_rewards = std_total_rewards / np.sqrt(total_rewards.shape[0])
-    return ste_total_rewards
+def get_jumpstart(dfs: List[pd.DataFrame], n_episodes: int):
+    jumpstarts = []
+
+    for df in dfs:
+        jumpstarts.append(np.mean(df[:n_episodes].values))
+
+    return jumpstarts
 
 
-def output_time_to_threshold(file_pattern, threshold):
-    total_rewards = load_total_reward(file_pattern)
-    time_to_threshold = []
-    moved_averaged = calc_moved_average(total_rewards)
-    for total_reward in moved_averaged:
-        flag = False
-        for episode, reward in enumerate(total_reward):
-            if threshold < reward:
-                time_to_threshold.append(episode)
-                flag = True
-                break
-        if episode == len(total_reward) - 1 and not flag:
-            time_to_threshold.append(episode)
-    return time_to_threshold
+def read_files(file_pattern: str) -> List[pd.DataFrame]:
+    dfs = []
 
+    for fname in get_file_list(file_pattern):
+        dfs.append(pd.read_csv(fname, index_col=0))
 
-def output_asymptotic_performance(file_pattern, window=10):
-    total_rewards = load_total_reward(file_pattern)
-    asymptotic_performances = []
-    for total_reward in total_rewards:
-        t_reward = np.array(total_reward[len(total_reward)-window:])
-        asymptotic_performances.append(np.mean(total_reward))
-    return asymptotic_performances
-
-
-def calc_moved_average(total_rewards, window=10):
-    moved_average_total_rewards = []
-    mean_total_rewards = np.mean(total_rewards, axis=0)
-    for total_reward in total_rewards:
-        moved_average_total_reward = []
-        for episode, reward in enumerate(total_reward):
-            if episode < window:
-                moved_average = mean_total_rewards[episode]
-            else:
-                moved_average\
-                    = sum(total_reward[episode - window: episode+1]) / window
-            moved_average_total_reward.append(moved_average)
-        moved_average_total_rewards.append(moved_average_total_reward)
-    return moved_average_total_rewards
+    return dfs
 
 
 def main():
@@ -131,11 +101,14 @@ def main():
 
     file_patterns = configs["file_patterns"]
     prefixes = configs["prefixes"]
-    asym_perf, learning_curve_dict = {}, {}
+    asym_perf, learning_curve_dict, jumpstart_dict = {}, {}, {}
     t2thres_500, t2thres_1000, t2thres_2000, t2thres_3000 = {}, {}, {}, {}
 
     for prefix, file_pattern in zip(prefixes, file_patterns):
         logger.info("Loading...\n {}".format(file_pattern))
+        dfs = read_files(file_pattern)
+        jumpstart_dict[prefix] = get_jumpstart(dfs, 10)
+        # TODO dfsを使うように修正。
         learning_curve_dict[f"{prefix}-mean"], learning_curve_dict[f"{prefix}-se"] = average_values(file_pattern)
         learning_curve_dict[f"{prefix}-mv"] = pd.Series(learning_curve_dict[f"{prefix}-mean"]).rolling(10, min_periods=1).mean()
         learning_curve_dict[f"{prefix}-lower"] = learning_curve_dict[f"{prefix}-mv"] - learning_curve_dict[f"{prefix}-se"]
@@ -158,6 +131,7 @@ def main():
     export(os.path.join(out_dir, "time_to_threshold_2000.csv"), t2thres_2000)
     export(os.path.join(out_dir, "time_to_threshold_1000.csv"), t2thres_1000)
     export(os.path.join(out_dir, "asymptotic_performance.csv"), asym_perf)
+    export(os.path.join(out_dir, "jumpstart.csv"), jumpstart_dict)
 
 if __name__ == "__main__":
     main()

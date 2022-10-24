@@ -1,26 +1,20 @@
 {
     "file_patterns": [
-        "/home/tokudo/develop/analyze_result/pinball/in/human/human/subgoal-online-learning-v0.8-human-non-negative_steps_*_0_eta=100_rho=0.01.csv",
-        "/home/tokudo/develop/analyze_result/pinball/in/human/human/subgoal-online-learning-v0.8-human-non-negative_steps_*_1_eta=100_rho=0.01.csv",
-        "/home/tokudo/develop/analyze_result/pinball/in/human/human/subgoal-online-learning-v0.8-human-non-negative_steps_*_2_eta=100_rho=0.01.csv",
-        "/home/tokudo/develop/analyze_result/pinball/in/human/human/subgoal-online-learning-v0.8-human-non-negative_steps_*_3_eta=100_rho=0.01.csv",
-        "/home/tokudo/develop/analyze_result/pinball/in/human/human/subgoal-online-learning-v0.8-human-non-negative_steps_*_4_eta=100_rho=0.01.csv",
-        "/home/tokudo/develop/analyze_result/pinball/in/human/human/subgoal-online-learning-v0.8-human-non-negative_steps_*_5_eta=100_rho=0.01.csv",
-        "/home/tokudo/develop/analyze_result/pinball/in/human/human/subgoal-online-learning-v0.8-human-non-negative_steps_*_6_eta=100_rho=0.01.csv",
-        "/home/tokudo/develop/analyze_result/pinball/in/human/human/subgoal-online-learning-v0.8-human-non-negative_steps_*_7_eta=100_rho=0.01.csv",
-        "/home/tokudo/develop/analyze_result/pinball/in/human/human/subgoal-online-learning-v0.8-human-non-negative_steps_*_8_eta=100_rho=0.01.csv",
-        "/home/tokudo/develop/analyze_result/pinball/in/human/human/subgoal-online-learning-v0.8-human-non-negative_steps_*_9_eta=100_rho=0.01.csv"
+        "/home/tokudo/develop/research/dynamic-trajectory-aggregation/learning/pinball/out/dynamic_human/steps/*.csv",
+        "/home/tokudo/develop/research/dynamic-trajectory-aggregation/learning/pinball/out/dynamic_random/steps/*.csv",
+        "/home/tokudo/develop/research/dynamic-trajectory-aggregation/learning/pinball/out/linrs_human/steps/*.csv",
+        "/home/tokudo/develop/research/dynamic-trajectory-aggregation/learning/pinball/out/nrs_human/steps/*.csv",
+        "/home/tokudo/develop/research/dynamic-trajectory-aggregation/learning/pinball/out/static_human/steps/*.csv",
+        "/home/tokudo/develop/research/dynamic-trajectory-aggregation/learning/pinball/out/static_random/steps/*.csv",
+        "/home/tokudo/develop/research/dynamic-trajectory-aggregation/learning/pinball/out/actor_critic/steps/*.csv"
     ],
     "prefixes": [
-        "DTA-subg0",
-        "DTA-subg1",
-        "DTA-subg2",
-        "DTA-subg3",
-        "DTA-subg4",
-        "DTA-subg5",
-        "DTA-subg6",
-        "DTA-subg7",
-        "DTA-subg8",
-        "DTA-subg9"
+        "DYN-HUMAN",
+        "DYN-RANDOM",
+        "LINRS",
+        "NRS",
+        "STATIC-HUMAN",
+        "STATIC-RANDOM",
+        "AC"
     ]
 }

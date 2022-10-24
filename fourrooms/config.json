@@ -1,4 +1,20 @@
 {
-    "file_patterns": ["in/human-dta/*", "in/human-srs-eta=0.01/*", "in/sarsa/*", "in/sprs_fourrooms_human/steps/*"],
-    "prefixes": ["DTA-", "SRS-", "SARSA-", "SPRS-"]
+    "file_patterns": [
+        "in/dynamic_human_20221022_1823/steps/*",
+        "in/dynamic_random_20221022_1830/steps/*",
+        "in/static_human/steps/*",
+        "in/static_random/steps/*",
+        "in/sarsa/*",
+        "/home/tokudo/develop/research/dynamic-trajectory-aggregation/learning/fourrooms/out/linrs_human_20221021_1531/steps/*",
+        "/home/tokudo/develop/research/dynamic-trajectory-aggregation/learning/fourrooms/out/naive_human_20221021_1644/steps/*"
+    ],
+    "prefixes": [
+        "DYN-HUMAN-",
+        "DYN-RANDOM-",
+        "STATIC-HUMAN-",
+        "STATIC-RANDOM-",
+        "SARSA-",
+        "LINRS-",
+        "NRS-"
+    ]
 }
