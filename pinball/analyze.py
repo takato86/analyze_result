@@ -59,13 +59,13 @@ def get_asymptotic_performance(file_pattern, n_window=10, episode=200):
     return asymptotic_performance
 
 
-def get_time_to_threshold(file_pattern, threshold, n_window=10, n_episodes=200):
+def get_time_to_threshold(file_pattern, threshold, n_window=10):
     # 移動平均を取ったあとにTime2Thresholdを取得
     file_list = get_file_list(file_pattern)
     time_to_thresholds = []
+
     for file_path in file_list:
         value_df = pd.read_csv(file_path, index_col=0)
-        value_df = value_df[:n_episodes]
         maveraged_df = value_df.rolling(window=n_window, min_periods=5).mean()
         v_list = maveraged_df.values.tolist()
         time_to_threshold = len(v_list)
@@ -107,7 +107,7 @@ def main():
     for prefix, file_pattern in zip(prefixes, file_patterns):
         logger.info("Loading...\n {}".format(file_pattern))
         dfs = read_files(file_pattern)
-        jumpstart_dict[prefix] = get_jumpstart(dfs, 10)
+        jumpstart_dict[prefix] = get_jumpstart(dfs, 1)
         # TODO dfsを使うように修正。
         learning_curve_dict[f"{prefix}-mean"], learning_curve_dict[f"{prefix}-se"] = average_values(file_pattern)
         learning_curve_dict[f"{prefix}-mv"] = pd.Series(learning_curve_dict[f"{prefix}-mean"]).rolling(10, min_periods=1).mean()
@@ -117,7 +117,7 @@ def main():
         t2thres_2000[prefix] = get_time_to_threshold(file_pattern, 2000)
         t2thres_1000[prefix] = get_time_to_threshold(file_pattern, 1000)
         t2thres_500[prefix] = get_time_to_threshold(file_pattern, 500)
-        asym_perf[prefix] = get_asymptotic_performance(file_pattern, n_window=5 ,episode=100)
+        asym_perf[prefix] = get_asymptotic_performance(file_pattern, n_window=1 ,episode=250)
 
     out_dir = 'out'
 

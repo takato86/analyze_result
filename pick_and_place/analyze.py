@@ -52,24 +52,24 @@ def result_learning_curves(file_pattern, prefix, column="test/success_rate", win
     return result
 
 
-def get_asymptotic_performance(file_pattern, n_window=10, episode=200, column="test/success_rate"):
+def get_asymptotic_performance(file_pattern, n_window=1, column="test/success_rate"):
     asymptotic_performance = []
     file_list = glob.glob(file_pattern)
     for file_path in file_list:
         progress_df = pd.read_csv(file_path, index_col=0)
-        values = progress_df[column].values.tolist()[episode - n_window: episode]
+        values = progress_df[column].dropna().values.tolist()[-n_window:]
         asymptotic_performance.append(np.mean(values))
     return asymptotic_performance
 
 
-def get_time_to_threshold(file_pattern, threshold, n_window=10, n_episodes=200,
+def get_time_to_threshold(file_pattern, threshold, n_window=10,
                           column="test/success_rate"):
     # 移動平均を取ったあとにTime2Thresholdを取得
     file_list = glob.glob(file_pattern)
     time_to_thresholds = []
     for file_path in file_list:
         progress_df = pd.read_csv(file_path, index_col=0)
-        value_df = progress_df[column][:n_episodes]
+        value_df = progress_df[column]
         maveraged_df = value_df.rolling(window=n_window, min_periods=5).mean()
         v_list = maveraged_df.values.tolist()
         time_to_threshold = len(v_list)
@@ -86,8 +86,8 @@ def get_jumpstart(dfs: List[pd.DataFrame], n_episodes: int, column: str) -> List
     jumpstarts = []
 
     for df in dfs:
-        target_df = df.dropna()
-        jumpstarts.append(np.mean(target_df.loc[:n_episodes, column].values))
+        target_df = df.loc[:, [column]].dropna()
+        jumpstarts.append(np.mean(target_df.loc[:n_episodes, :].values))
 
     return jumpstarts
 
@@ -103,7 +103,7 @@ def main():
     for file_pattern, prefix in zip(configs["file_patterns"], configs["prefixes"]):
         logger.info("Loading...\n {}".format(file_pattern))
         dfs = read_files(file_pattern)
-        jumpstart[prefix] = get_jumpstart(dfs, 100, configs["column"])
+        jumpstart[prefix] = get_jumpstart(dfs, 1, configs["column"])
         learning_curves.append(
             result_learning_curves(file_pattern, prefix, configs["column"])
         )
@@ -123,7 +123,7 @@ def main():
             file_pattern, 0.9, column=configs["column"]
         )
         asym_perf[prefix] = get_asymptotic_performance(
-            file_pattern, n_window=10 ,episode=200, column=configs["column"]
+            file_pattern, n_window=1 ,column=configs["column"]
         )
     learning_curve_df = pd.concat(learning_curves, axis=1)
     learning_curve_df = learning_curve_df.fillna(0)
