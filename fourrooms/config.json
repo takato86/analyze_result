@@ -1,18 +1,20 @@
 {
     "file_patterns": [
-        "C:/Users/kerne/Downloads/experimental_results/four-room/sarsa/sarsa/*",
-        "C:/Users/kerne/Downloads/experimental_results/four-room/dynamic_human/human/*",
-        "C:/Users/kerne/Downloads/experimental_results/four-room/dynamic_random/random/*initial-0_0-*.csv",
-        "C:/Users/kerne/Downloads/experimental_results/four-room/static_human/human-srs-eta=0.01/steps/*",
-        "C:/Users/kerne/Downloads/experimental_results/four-room/static_random/random-srs-eta=0.01/steps/*",
-        "C:/Users/kerne/Downloads/experimental_results/four-room/naive/naive/*eta=1.0-*.csv"
+        "in/dynamic_human_20221022_1823/steps/*",
+        "in/dynamic_random_20221022_1830/steps/*",
+        "in/static_human/steps/*",
+        "in/static_random/steps/*",
+        "in/sarsa/*",
+        "/home/tokudo/develop/research/dynamic-trajectory-aggregation/learning/fourrooms/out/linrs_human_20221021_1531/steps/*",
+        "/home/tokudo/develop/research/dynamic-trajectory-aggregation/learning/fourrooms/out/naive_human_20221021_1644/steps/*"
     ],
     "prefixes": [
-        "BASELINE-",
-        "DYN_HUMAN-",
-        "DYN_RANDOM-",
-        "STA_HUMAN-",
-        "STA_RANDOM-",
-        "NAIVE-"
+        "DYN-HUMAN-",
+        "DYN-RANDOM-",
+        "STATIC-HUMAN-",
+        "STATIC-RANDOM-",
+        "SARSA-",
+        "LINRS-",
+        "NRS-"
     ]
 }

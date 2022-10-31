@@ -1,19 +1,21 @@
 {
     "file_patterns": [
-        "C:/Users/kerne/Downloads/experimental_results/picknplace/baseline/baseline/*/progress.csv",
-        "C:/Users/kerne/Downloads/experimental_results/picknplace/dynamic_human/dta_20220924_o/*/progress.csv",
-        "C:/Users/kerne/Downloads/experimental_results/picknplace/dynamic_random/dta_random_20220927/*/progress.csv",
-        "C:/Users/kerne/Downloads/experimental_results/picknplace/static_human/srs/*/progress.csv",
-        "C:/Users/kerne/Downloads/experimental_results/picknplace/nrs_human/nrs/*/progress.csv",
-        "C:/Users/kerne/Downloads/experimental_results/picknplace/linrs_human/linrs/*/progress.csv"
+        "/home/tokudo/develop/research/pdrl/runs/train/baseline/*/progress.csv",
+        "/home/tokudo/develop/research/pdrl/runs/train/dta_20220924_o/*/progress.csv",
+        "/home/tokudo/develop/research/pdrl/runs/train/dta_random_20220927/*/progress.csv",
+        "/home/tokudo/develop/research/pdrl/runs/train/nrs/*/progress.csv",
+        "/home/tokudo/develop/research/pdrl/runs/train/srs/*/progress.csv",
+        "/home/tokudo/develop/research/pdrl/runs/train/linrs/*/progress.csv",
+        "/home/tokudo/develop/research/pdrl/runs/train/dta_init_o/*/progress.csv"
     ],
     "column": "Test/succ_rate",
     "prefixes": [
         "BASELINE-",
-        "DYN_HUMAN-",
-        "DYN_RANDOM-",
-        "STA_HUMAN-",
-        "NAIVE-",
-        "LiNRS-"
+        "DTA-",
+        "RANDOM-",
+        "NRS-",
+        "SRS-",
+        "LINRS-",
+        "DTAINIT-"
     ]
 }
