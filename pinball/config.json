@@ -1,26 +1,18 @@
 {
     "file_patterns": [
-        "/home/tokudo/develop/analyze_result/pinball/in/human/human/subgoal-online-learning-v0.8-human-non-negative_steps_*_0_eta=100_rho=0.01.csv",
-        "/home/tokudo/develop/analyze_result/pinball/in/human/human/subgoal-online-learning-v0.8-human-non-negative_steps_*_1_eta=100_rho=0.01.csv",
-        "/home/tokudo/develop/analyze_result/pinball/in/human/human/subgoal-online-learning-v0.8-human-non-negative_steps_*_2_eta=100_rho=0.01.csv",
-        "/home/tokudo/develop/analyze_result/pinball/in/human/human/subgoal-online-learning-v0.8-human-non-negative_steps_*_3_eta=100_rho=0.01.csv",
-        "/home/tokudo/develop/analyze_result/pinball/in/human/human/subgoal-online-learning-v0.8-human-non-negative_steps_*_4_eta=100_rho=0.01.csv",
-        "/home/tokudo/develop/analyze_result/pinball/in/human/human/subgoal-online-learning-v0.8-human-non-negative_steps_*_5_eta=100_rho=0.01.csv",
-        "/home/tokudo/develop/analyze_result/pinball/in/human/human/subgoal-online-learning-v0.8-human-non-negative_steps_*_6_eta=100_rho=0.01.csv",
-        "/home/tokudo/develop/analyze_result/pinball/in/human/human/subgoal-online-learning-v0.8-human-non-negative_steps_*_7_eta=100_rho=0.01.csv",
-        "/home/tokudo/develop/analyze_result/pinball/in/human/human/subgoal-online-learning-v0.8-human-non-negative_steps_*_8_eta=100_rho=0.01.csv",
-        "/home/tokudo/develop/analyze_result/pinball/in/human/human/subgoal-online-learning-v0.8-human-non-negative_steps_*_9_eta=100_rho=0.01.csv"
+        "C:/Users/kerne/Downloads/experimental_results/pinball/actor-critic/actor-critic/*_steps_*.csv",
+        "C:/Users/kerne/Downloads/experimental_results/pinball/dynamic_human/human/*_steps_*.csv",
+        "C:/Users/kerne/Downloads/experimental_results/pinball/dynamic_random/random/*_steps_*.csv",
+        "C:/Users/kerne/Downloads/experimental_results/pinball/static_human/human-srs-eta=100/steps/*_steps_*.csv",
+        "C:/Users/kerne/Downloads/experimental_results/pinball/static_random/random-srs-eta=100/steps/*_steps_*.csv",
+        "C:/Users/kerne/Downloads/experimental_results/pinball/naive/naive/*_steps_*.csv"
     ],
     "prefixes": [
-        "DTA-subg0",
-        "DTA-subg1",
-        "DTA-subg2",
-        "DTA-subg3",
-        "DTA-subg4",
-        "DTA-subg5",
-        "DTA-subg6",
-        "DTA-subg7",
-        "DTA-subg8",
-        "DTA-subg9"
+        "BASELINE",
+        "DYN_HUMAN",
+        "DYN_RANDOM",
+        "STA_HUMAN",
+        "STA_RANDOM",
+        "NAIVE"
     ]
 }

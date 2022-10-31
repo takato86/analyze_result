@@ -1,4 +1,18 @@
 {
-    "file_patterns": ["in/human-dta/*", "in/human-srs-eta=0.01/*", "in/sarsa/*", "in/sprs_fourrooms_human/steps/*"],
-    "prefixes": ["DTA-", "SRS-", "SARSA-", "SPRS-"]
+    "file_patterns": [
+        "C:/Users/kerne/Downloads/experimental_results/four-room/sarsa/sarsa/*",
+        "C:/Users/kerne/Downloads/experimental_results/four-room/dynamic_human/human/*",
+        "C:/Users/kerne/Downloads/experimental_results/four-room/dynamic_random/random/*initial-0_0-*.csv",
+        "C:/Users/kerne/Downloads/experimental_results/four-room/static_human/human-srs-eta=0.01/steps/*",
+        "C:/Users/kerne/Downloads/experimental_results/four-room/static_random/random-srs-eta=0.01/steps/*",
+        "C:/Users/kerne/Downloads/experimental_results/four-room/naive/naive/*eta=1.0-*.csv"
+    ],
+    "prefixes": [
+        "BASELINE-",
+        "DYN_HUMAN-",
+        "DYN_RANDOM-",
+        "STA_HUMAN-",
+        "STA_RANDOM-",
+        "NAIVE-"
+    ]
 }

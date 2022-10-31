@@ -1,14 +1,19 @@
 {
     "file_patterns": [
-        "/home/tokudo/Develop/research/pdrl/runs/train/dynamic_potential_v2/*/progress.csv",
-        "/home/tokudo/Develop/research/pdrl/runs/train/static_potential/*/progress.csv",
-        "/home/tokudo/Develop/research/pdrl/runs/baseline/*/progress.csv",
-        "/home/tokudo/Develop/research/pdrl/runs/train/naive_rs/*/progress.csv",
-        "/home/tokudo/Develop/research/pdrl/runs/train/linaive_rs/*/progress.csv",
-        "/home/tokudo/Develop/research/pdrl/runs/train/random_subgoal_v2/*/progress.csv"
+        "C:/Users/kerne/Downloads/experimental_results/picknplace/baseline/baseline/*/progress.csv",
+        "C:/Users/kerne/Downloads/experimental_results/picknplace/dynamic_human/dta_20220924_o/*/progress.csv",
+        "C:/Users/kerne/Downloads/experimental_results/picknplace/dynamic_random/dta_random_20220927/*/progress.csv",
+        "C:/Users/kerne/Downloads/experimental_results/picknplace/static_human/srs/*/progress.csv",
+        "C:/Users/kerne/Downloads/experimental_results/picknplace/nrs_human/nrs/*/progress.csv",
+        "C:/Users/kerne/Downloads/experimental_results/picknplace/linrs_human/linrs/*/progress.csv"
     ],
     "column": "Test/succ_rate",
     "prefixes": [
-        "DSRS-", "SSRS-", "BASELINE-", "NRS-", "LiNRS-", "Random-"
+        "BASELINE-",
+        "DYN_HUMAN-",
+        "DYN_RANDOM-",
+        "STA_HUMAN-",
+        "NAIVE-",
+        "LiNRS-"
     ]
 }
