@@ -95,7 +95,7 @@ def calc_time_to_threshold(file_pattern, threshold):
 def result_learning_curve(file_pattern, prefix):
     logger.info("Loading {}...".format(file_pattern))
     serieses = [
-        pd.read_csv(file_path, encoding="utf-8")
+        pd.read_csv(file_path, encoding="utf-8", header=None)
         for file_path in glob.glob(file_pattern)
     ]
     logger.info("Complete loading.")
