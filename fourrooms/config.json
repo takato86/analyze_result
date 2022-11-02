@@ -77,12 +77,12 @@
         "STATIC-HUMAN-10-",
         "STATIC-HUMAN-15-",
         "STATIC-HUMAN-19-",
-        "DYN-HUMAN-RICH",
-        "SARSA-RICH",
-        "STATIC-HUMAN-RICH",
-        "DYN-HUMAN-STEP",
-        "SARSA-STEP",
-        "STATIC-HUMAN-STEP",
+        "DYN-HUMAN-RICH-",
+        "SARSA-RICH-",
+        "STATIC-HUMAN-RICH-",
+        "DYN-HUMAN-STEP-",
+        "SARSA-STEP-",
+        "STATIC-HUMAN-STEP-",
         "DYN-HUMAN-P0-",
         "DYN-HUMAN-P1-",
         "DYN-HUMAN-P2-",
@@ -104,9 +104,9 @@
         "STATIC-HUMAN-P8-",
         "STATIC-HUMAN-P9-",
 
-        "DYNAMIC-HUMAN-PARTIALLY",
-        "DYNAMIC-HUMAN-TOTALLY",
-        "STATIC-HUMAN-PARTIALLY",
-        "STATIC-HUMAN-TOTALLY"
+        "DYNAMIC-HUMAN-PARTIALLY-",
+        "DYNAMIC-HUMAN-TOTALLY-",
+        "STATIC-HUMAN-PARTIALLY-",
+        "STATIC-HUMAN-TOTALLY-"
     ]
 }
