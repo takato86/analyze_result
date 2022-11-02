@@ -1,6 +1,7 @@
 import csv
 import os
 import json
+from typing import Dict, List
 import pandas as pd
 import numpy as np
 import sys
@@ -108,8 +109,14 @@ def result_learning_curve(file_pattern, prefix):
     return learning_curve
 
 
-def transform(contents):
-    return pd.DataFrame(contents)
+def transform(contents: Dict[str, List[float]]):
+    max_num = max([len(l) for l in contents.values()])
+    for key, l in contents.items():
+        if len(l) < max_num:
+            for _ in range(max_num - len(l)):
+                contents[key].append(None)
+
+    return pd.DataFrame.from_dict(contents)
 
 
 def main():

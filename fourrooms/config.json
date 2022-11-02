@@ -1,12 +1,24 @@
 {
     "file_patterns": [
-        "in/dynamic_human_20221022_1823/steps/*",
-        "in/dynamic_random_20221022_1830/steps/*",
-        "in/static_human/steps/*",
-        "in/static_random/steps/*",
-        "in/sarsa/*",
-        "/home/tokudo/develop/research/dynamic-trajectory-aggregation/learning/fourrooms/out/linrs_human_20221021_1531/steps/*",
-        "/home/tokudo/develop/research/dynamic-trajectory-aggregation/learning/fourrooms/out/naive_human_20221021_1644/steps/*"
+        "/home/tokudo/Develop/research/dynamic-trajectory-aggregation/learning/fourrooms/out/dynamic_human_20221024_1650/steps/*",
+        "/home/tokudo/Develop/research/dynamic-trajectory-aggregation/learning/fourrooms/out/dynamic_random_20221024_1659/steps/*",
+        "/home/tokudo/Develop/research/dynamic-trajectory-aggregation/learning/fourrooms/out/static_human_20221024_2040/steps/*",
+        "/home/tokudo/Develop/research/dynamic-trajectory-aggregation/learning/fourrooms/out/static_random_20221024_2327/steps/*",
+        "/home/tokudo/Develop/research/dynamic-trajectory-aggregation/learning/fourrooms/out/sarsa_20221024_1730/steps/*",
+        "/home/tokudo/Develop/research/dynamic-trajectory-aggregation/learning/fourrooms/out/nrs_human_20221024_1750/steps/*",
+        "/home/tokudo/Develop/research/dynamic-trajectory-aggregation/learning/fourrooms/out/linrs_human_20221024_1739/steps/*",
+        "/home/tokudo/Develop/research/dynamic-trajectory-aggregation/learning/fourrooms/out/num_subgs/dynamic_human_1_20221101_1040/steps/*",
+        "/home/tokudo/Develop/research/dynamic-trajectory-aggregation/learning/fourrooms/out/num_subgs/dynamic_human_2_20221101_1041/steps/*",
+        "/home/tokudo/Develop/research/dynamic-trajectory-aggregation/learning/fourrooms/out/num_subgs/dynamic_human_5_20221101_1042/steps/*",
+        "/home/tokudo/Develop/research/dynamic-trajectory-aggregation/learning/fourrooms/out/num_subgs/dynamic_human_10_20221101_1734/steps/*",
+        "/home/tokudo/Develop/research/dynamic-trajectory-aggregation/learning/fourrooms/out/num_subgs/dynamic_human_15_20221101_1043/steps/*",
+        "/home/tokudo/Develop/research/dynamic-trajectory-aggregation/learning/fourrooms/out/num_subgs/dynamic_human_19_20221101_1044/steps/*",
+        "/home/tokudo/Develop/research/dynamic-trajectory-aggregation/learning/fourrooms/out/rich_env/dynamic_human_20221101_1049/steps/*",
+        "/home/tokudo/Develop/research/dynamic-trajectory-aggregation/learning/fourrooms/out/rich_env/sarsa_20221101_1050/steps/*",
+        "/home/tokudo/Develop/research/dynamic-trajectory-aggregation/learning/fourrooms/out/rich_env/static_human_20221101_1051/steps/*",
+        "/home/tokudo/Develop/research/dynamic-trajectory-aggregation/learning/fourrooms/out/step_env/dynamic_human_20221101_1740/steps/*",
+        "/home/tokudo/Develop/research/dynamic-trajectory-aggregation/learning/fourrooms/out/step_env/sarsa_20221101_1741/steps/*",
+        "/home/tokudo/Develop/research/dynamic-trajectory-aggregation/learning/fourrooms/out/step_env/static_human_20221101_1741/steps/*"
     ],
     "prefixes": [
         "DYN-HUMAN-",
@@ -14,7 +26,19 @@
         "STATIC-HUMAN-",
         "STATIC-RANDOM-",
         "SARSA-",
+        "NRS-",
         "LINRS-",
-        "NRS-"
+        "DYN-HUMAN-1-",
+        "DYN-HUMAN-2-",
+        "DYN-HUMAN-5-",
+        "DYN-HUMAN-10-",
+        "DYN-HUMAN-15-",
+        "DYN-HUMAN-19-",
+        "DYN-HUMAN-RICH",
+        "SARSA-RICH",
+        "STATIC-HUMAN-RICH",
+        "DYN-HUMAN-STEP",
+        "SARSA-STEP",
+        "STATIC-HUMAN-STEP"
     ]
 }
