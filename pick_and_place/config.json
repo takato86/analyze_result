@@ -1,20 +1,22 @@
 {
     "file_patterns": [
         "/home/tokudo/develop/research/pdrl/runs/train/baseline/*/progress.csv",
-        "/home/tokudo/develop/research/pdrl/runs/train/dta_20220924_o/*/progress.csv",
-        "/home/tokudo/develop/research/pdrl/runs/train/dta_random_20220927/*/progress.csv",
+        "/home/tokudo/develop/research/pdrl/runs/train/dta_20221030_o/*/progress.csv",
+        "/home/tokudo/develop/research/pdrl/runs/train/dta_random_20221101_o/*/progress.csv",
         "/home/tokudo/develop/research/pdrl/runs/train/nrs/*/progress.csv",
         "/home/tokudo/develop/research/pdrl/runs/train/srs/*/progress.csv",
+        "/home/tokudo/develop/research/pdrl/runs/train/srs_random/*/progress.csv",
         "/home/tokudo/develop/research/pdrl/runs/train/linrs/*/progress.csv",
         "/home/tokudo/develop/research/pdrl/runs/train/dta_init_o/*/progress.csv"
     ],
     "column": "Test/succ_rate",
     "prefixes": [
         "BASELINE-",
-        "DTA-",
-        "RANDOM-",
+        "DYN-HUMAN-",
+        "DYN-RANDOM-",
         "NRS-",
-        "SRS-",
+        "STATIC-HUMAN-",
+        "STATIC-RANDOM-",
         "LINRS-",
         "DTAINIT-"
     ]
