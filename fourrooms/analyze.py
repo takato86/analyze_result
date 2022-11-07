@@ -167,7 +167,7 @@ def main():
     time_to_threshold_300 = transform(time_to_threshold_300)
     time_to_threshold_100 = transform(time_to_threshold_100)
     time_to_threshold_50 = transform(time_to_threshold_50)
-    export_csv("first_steps.csv", first_steps)
+    export_csv("jumpstart.csv", first_steps)
     export_csv("asymptotic_performance.csv", asymptotic_performance)
     export_csv("asymptotic_steps.csv", asymptotic_steps)
     export_csv("cumulative_steps.csv", cumulative_steps)
