@@ -28,7 +28,13 @@
         "/home/tokudo/develop/research/dynamic-trajectory-aggregation/learning/pinball/out/srs_human_v2/steps/SRSAgent_steps_6_*.csv",
         "/home/tokudo/develop/research/dynamic-trajectory-aggregation/learning/pinball/out/srs_human_v2/steps/SRSAgent_steps_7_*.csv",
         "/home/tokudo/develop/research/dynamic-trajectory-aggregation/learning/pinball/out/srs_human_v2/steps/SRSAgent_steps_8_*.csv",
-        "/home/tokudo/develop/research/dynamic-trajectory-aggregation/learning/pinball/out/srs_human_v2/steps/SRSAgent_steps_9_*.csv"
+        "/home/tokudo/develop/research/dynamic-trajectory-aggregation/learning/pinball/out/srs_human_v2/steps/SRSAgent_steps_9_*.csv",
+
+        "/home/tokudo/develop/research/dynamic-trajectory-aggregation/learning/pinball/out/static_1/steps/*.csv",
+        "/home/tokudo/develop/research/dynamic-trajectory-aggregation/learning/pinball/out/static_10/steps/*.csv",
+        "/home/tokudo/develop/research/dynamic-trajectory-aggregation/learning/pinball/out/static_100/steps/*.csv",
+        "/home/tokudo/develop/research/dynamic-trajectory-aggregation/learning/pinball/out/static_1000/steps/*.csv",
+        "/home/tokudo/develop/research/dynamic-trajectory-aggregation/learning/pinball/out/static_10000/steps/*.csv"
     ],
     "prefixes": [
         "DYN-HUMAN",
@@ -57,6 +63,11 @@
         "STATIC-HUMAN-P6",
         "STATIC-HUMAN-P7",
         "STATIC-HUMAN-P8",
-        "STATIC-HUMAN-P9"
+        "STATIC-HUMAN-P9",
+        "STATIC-1",
+        "STATIC-10",
+        "STATIC-100",
+        "STATIC-1000",
+        "STATIC-10000"
     ]
 }
