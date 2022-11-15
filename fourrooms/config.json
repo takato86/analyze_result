@@ -55,7 +55,17 @@
         "/home/tokudo/Develop/research/dynamic-trajectory-aggregation/learning/fourrooms/out/partially_totally/dynamic_human_partially_20221102_1057/steps/*",
         "/home/tokudo/Develop/research/dynamic-trajectory-aggregation/learning/fourrooms/out/partially_totally/dynamic_human_4_20221102_1102/steps/*",
         "/home/tokudo/Develop/research/dynamic-trajectory-aggregation/learning/fourrooms/out/partially_totally/static_human_partially_20221102_1144/steps/*",
-        "/home/tokudo/Develop/research/dynamic-trajectory-aggregation/learning/fourrooms/out/partially_totally/static_human_4_20221102_1141/steps/*"
+        "/home/tokudo/Develop/research/dynamic-trajectory-aggregation/learning/fourrooms/out/partially_totally/static_human_4_20221102_1141/steps/*",
+
+        "/home/tokudo/Develop/research/dynamic-trajectory-aggregation/learning/fourrooms/out/static_hypara/static_human_20221024_1709/steps/*",
+        "/home/tokudo/Develop/research/dynamic-trajectory-aggregation/learning/fourrooms/out/static_hypara/static_human_20221024_2031/steps/*",
+        "/home/tokudo/Develop/research/dynamic-trajectory-aggregation/learning/fourrooms/out/static_hypara/static_human_20221024_2040/steps/*",
+        "/home/tokudo/Develop/research/dynamic-trajectory-aggregation/learning/fourrooms/out/static_hypara/static_human_20221024_2049/steps/*",
+        "/home/tokudo/Develop/research/dynamic-trajectory-aggregation/learning/fourrooms/out/static_hypara/static_human_20221024_2242/steps/*",
+
+        "/home/tokudo/Develop/research/dynamic-trajectory-aggregation/learning/fourrooms/out/dynamic_human_0.1_20221107_2042/steps/*.csv",
+        "/home/tokudo/Develop/research/dynamic-trajectory-aggregation/learning/fourrooms/out/dynamic_human_0.01_20221107_2042/steps/*.csv",
+        "/home/tokudo/Develop/research/dynamic-trajectory-aggregation/learning/fourrooms/out/dynamic_human_0.001_20221107_2043/steps/*.csv"        
     ],
     "prefixes": [
         "DYN-HUMAN-",
@@ -107,6 +117,16 @@
         "DYNAMIC-HUMAN-PARTIALLY-",
         "DYNAMIC-HUMAN-TOTALLY-",
         "STATIC-HUMAN-PARTIALLY-",
-        "STATIC-HUMAN-TOTALLY-"
+        "STATIC-HUMAN-TOTALLY-",
+
+        "STATIC-HYPARA-0.01-",
+        "STATIC-HYPARA-0.1-",
+        "STATIC-HYPARA-1-",
+        "STATIC-HYPARA-10-",
+        "STATIC-HYPARA-100-",
+
+        "DYN-HUMAN-STEP-0.1-",
+        "DYN-HUMAN-STEP-0.01-",
+        "DYN-HUMAN-STEP-0.001-"
     ]
 }
